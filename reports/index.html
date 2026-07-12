@@ -32,14 +32,14 @@
   <h1>Dashboard de performance</h1>
   <div class="sub">Historico unificado de corridas k6 y JMeter</div>
   <div class="stats">
-    <div class="stat"><div class="n">2</div><div class="l">corridas</div></div>
-    <div class="stat"><div class="n">2</div><div class="l">pasadas</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">corridas</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">pasadas</div></div>
     <div class="stat"><div class="n">0</div><div class="l">falladas</div></div>
     <div class="stat"><div class="n">0</div><div class="l">con alertas</div></div>
   </div>
   <div class="panel">
     <div class="lbl" style="font-size:13px;margin-bottom:8px">p95 por corrida (verde = PASS, rojo = FAIL)</div>
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="2.00" width="40.00" height="38.00" fill="#16a34a"><title>k6 smoke - 70.46 ms</title></rect><rect x="50.00" y="2.71" width="40.00" height="37.29" fill="#16a34a"><title>k6 smoke - 69.14 ms</title></rect></svg>
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="29.73" width="26.67" height="10.27" fill="#16a34a"><title>k6 smoke - 70.46 ms</title></rect><rect x="33.33" y="29.93" width="26.67" height="10.07" fill="#16a34a"><title>k6 smoke - 69.14 ms</title></rect><rect x="66.67" y="2.00" width="26.67" height="38.00" fill="#16a34a"><title>k6 smoke - 260.78 ms</title></rect></svg>
   </div>
   <div class="filters">
     <button class="active" data-f="all">Todas</button>
@@ -58,6 +58,18 @@
         <th>Disp.</th><th>p95</th><th>Error</th><th>TPS/QPS</th><th>Resultado</th><th>Reporte</th>
       </tr></thead>
       <tbody id="rows"><tr data-tool="k6" data-type="smoke">
+      <td>2026-07-12T04-20-12</td>
+      <td>k6</td>
+      <td>web</td>
+      <td>smoke</td>
+      <td class="trunc" title="https://www.metlife.com.mx/">https://www.metlife.com.mx/</td>
+      <td>100%</td>
+      <td>260.78 ms</td>
+      <td>0.00%</td>
+      <td>0.9</td>
+      <td><span class="badge" style="background:#16a34a">PASS</span> </td>
+      <td><a href="runs/2026-07-12T04-20-12-k6-smoke-web/report.html">ver</a></td>
+    </tr><tr data-tool="k6" data-type="smoke">
       <td>2026-07-12T04-04-51</td>
       <td>k6</td>
       <td>api</td>
