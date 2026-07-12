@@ -1,0 +1,38 @@
+name: Claude
+
+# Agente de GitHub: responde cuando mencionas @claude en un issue o PR.
+# Ideal para que triaje los issues de alerta que abre el workflow Monitor:
+# investiga el reporte, compara con el historico y propone una causa o un PR.
+#
+# REQUISITO: crear el secret ANTHROPIC_API_KEY en
+#   Settings > Secrets and variables > Actions > New repository secret
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+
+jobs:
+  claude:
+    # Solo se activa si el texto menciona @claude.
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}

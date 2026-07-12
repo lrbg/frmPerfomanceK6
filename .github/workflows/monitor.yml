@@ -1,0 +1,53 @@
+name: Monitor
+
+# Vigilancia continua: corre health checks contra los targets de produccion y,
+# si detecta caida, degradacion o lentitud fuera de lo normal, abre un GitHub Issue.
+on:
+  schedule:
+    - cron: '*/15 * * * *' # cada 15 min (ajusta la cadencia segun tu presupuesto de Actions)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Instalar k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" \
+            | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Health checks + alertas
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Lista de targets a vigilar (plataforma + nombre en perf.config.json).
+          for pair in "web demo" "api demo"; do
+            set -- $pair
+            echo "== monitoreando $1/$2 =="
+            node bin/perf.js --tool k6 --platform "$1" --type smoke --target "$2" --notify || true
+          done
+
+      - name: Guardar historico
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git commit -m "monitor: health checks $(date -u +%Y-%m-%dT%H:%MZ)" || echo "sin cambios"
+          git push || echo "no se pudo hacer push"

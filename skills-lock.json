@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "151-java-performance-jmeter": {
+      "source": "jabrena/cursor-rules-java",
+      "sourceType": "github",
+      "skillPath": "skills/151-java-performance-jmeter/SKILL.md",
+      "computedHash": "4a9e08901ab07aba56cd8063329fd74f4f59264c9fc7d34d2eae2eb599f317b3"
+    },
+    "jmeter-test-plan-creator": {
+      "source": "jeremylongshore/claude-code-plugins-plus-skills",
+      "sourceType": "github",
+      "skillPath": "skills/10-performance-testing/jmeter-test-plan-creator/SKILL.md",
+      "computedHash": "d977e1d0165fe494b4c6170b8d4f96376e94051c191bc4c3dd2fe6b2d519f0ff"
+    },
+    "k6": {
+      "source": "grafana/skills",
+      "sourceType": "github",
+      "skillPath": "skills/grafana-k6/k6/SKILL.md",
+      "computedHash": "298c11bba3c8828c05886aa772c152dfb25fd3792c6a8a4327f4e3f927139426"
+    },
+    "k6-docs": {
+      "source": "grafana/skills",
+      "sourceType": "github",
+      "skillPath": "skills/grafana-k6/k6-docs/SKILL.md",
+      "computedHash": "b529654e4c061c3e8a8f5c66dd13d45f708185e61f47d164d3c69b3ea6790154"
+    }
+  }
+}

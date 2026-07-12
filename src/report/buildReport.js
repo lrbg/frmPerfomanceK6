@@ -8,15 +8,21 @@ export function normalizeK6(summaryPath) {
   const data = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
   const m = data.metrics || {};
   const dur = m.http_req_duration?.values || {};
+  const errorRate = m.http_req_failed?.values?.rate ?? 0;
+  const durationS = (data.state?.testRunDurationMs || 0) / 1000;
+  const reqs = Math.round(m.http_reqs?.values?.count || 0);
   return {
-    http_reqs: Math.round(m.http_reqs?.values?.count || 0),
+    http_reqs: reqs,
     avg_ms: round(dur.avg),
     p90_ms: round(dur['p(90)']),
     p95_ms: round(dur['p(95)']),
+    p99_ms: round(dur['p(99)']),
     max_ms: round(dur.max),
-    error_rate: m.http_req_failed?.values?.rate ?? 0,
+    error_rate: errorRate,
+    availability: round((1 - errorRate) * 100), // % de peticiones exitosas
+    rps: round(m.http_reqs?.values?.rate ?? (durationS ? reqs / durationS : 0)), // throughput TPS/QPS
     vus_max: m.vus_max?.values?.max ?? null,
-    duration_s: round((data.state?.testRunDurationMs || 0) / 1000),
+    duration_s: round(durationS),
   };
 }
 
@@ -25,25 +31,39 @@ export function normalizeJmeter(jtlPath) {
   const header = lines.shift().split(',');
   const iElapsed = header.indexOf('elapsed');
   const iSuccess = header.indexOf('success');
+  const iTs = header.indexOf('timeStamp');
   const times = [];
   let fails = 0;
+  let tsMin = Infinity;
+  let tsMax = -Infinity;
   for (const line of lines) {
     if (!line) continue;
     const cols = line.split(',');
-    times.push(Number(cols[iElapsed]));
+    const elapsed = Number(cols[iElapsed]);
+    times.push(elapsed);
     if (cols[iSuccess] !== 'true') fails++;
+    if (iTs >= 0) {
+      const ts = Number(cols[iTs]);
+      if (ts < tsMin) tsMin = ts;
+      if (ts + elapsed > tsMax) tsMax = ts + elapsed;
+    }
   }
   times.sort((a, b) => a - b);
   const count = times.length || 1;
+  const errorRate = fails / count;
+  const durationS = Number.isFinite(tsMin) && tsMax > tsMin ? (tsMax - tsMin) / 1000 : null;
   return {
     http_reqs: times.length,
     avg_ms: round(times.reduce((a, b) => a + b, 0) / count),
     p90_ms: round(percentile(times, 90)),
     p95_ms: round(percentile(times, 95)),
+    p99_ms: round(percentile(times, 99)),
     max_ms: round(times[times.length - 1] || 0),
-    error_rate: fails / count,
+    error_rate: errorRate,
+    availability: round((1 - errorRate) * 100),
+    rps: durationS ? round(times.length / durationS) : null,
     vus_max: null,
-    duration_s: null,
+    duration_s: round(durationS),
   };
 }
 
@@ -54,6 +74,20 @@ export function writeReport(outDir, meta) {
   const htmlPath = path.join(outDir, 'report.html');
   fs.writeFileSync(htmlPath, html);
   return htmlPath;
+}
+
+function renderAlerts(alerts) {
+  if (!alerts || !alerts.length) {
+    return `<div class="alert ok">Sin alertas: todas las senales dentro de lo esperado.</div>`;
+  }
+  return alerts
+    .map(
+      (a) =>
+        `<div class="alert ${a.severity === 'critical' ? 'crit' : 'warn'}">
+          <strong>${a.severity === 'critical' ? 'CRITICO' : 'AVISO'}</strong> &middot; ${esc(a.message)}
+        </div>`
+    )
+    .join('');
 }
 
 function metricCard(label, value, sub = '') {
@@ -92,6 +126,15 @@ function renderReport(m) {
   @media(prefers-color-scheme:light){td{border-color:#eee}}
   .lbl{opacity:.65}
   a{color:#60a5fa}
+  .alert{border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px;border:1px solid}
+  .alert.ok{background:#0f2417;border-color:#1c5236;color:#7ee2a8}
+  .alert.warn{background:#2a2410;border-color:#5a4d15;color:#f2d675}
+  .alert.crit{background:#2a1212;border-color:#5a1d1d;color:#f4a0a0}
+  @media(prefers-color-scheme:light){
+    .alert.ok{background:#ecfdf5;color:#065f46}
+    .alert.warn{background:#fffbeb;color:#92400e}
+    .alert.crit{background:#fef2f2;color:#991b1b}
+  }
 </style></head>
 <body><div class="wrap">
   <h1>Reporte de performance</h1>
@@ -104,12 +147,20 @@ function renderReport(m) {
     <tr><td class="lbl">Umbral p95</td><td>${esc(m.thresholds.p95_ms)} ms</td></tr>
     <tr><td class="lbl">Umbral error</td><td>${(m.thresholds.error_rate * 100).toFixed(2)}%</td></tr>
   </table>
+  ${renderAlerts(m.alerts)}
+  <div class="lbl" style="font-size:13px;margin-top:8px">Senales de oro (KPIs)</div>
   <div class="grid">
-    ${metricCard('p95', `${m.p95_ms ?? '-'} ms`, `umbral ${m.thresholds.p95_ms} ms`)}
+    ${metricCard('disponibilidad', `${m.availability ?? '-'}%`, 'uptime')}
+    ${metricCard('p95 latencia', `${m.p95_ms ?? '-'} ms`, `umbral ${m.thresholds.p95_ms} ms`)}
+    ${metricCard('errores', errPct)}
+    ${metricCard('TPS / QPS', `${m.rps ?? '-'}`, 'req/seg')}
+  </div>
+  <div class="lbl" style="font-size:13px">Detalle</div>
+  <div class="grid">
     ${metricCard('p90', `${m.p90_ms ?? '-'} ms`)}
+    ${metricCard('p99', `${m.p99_ms ?? '-'} ms`)}
     ${metricCard('promedio', `${m.avg_ms ?? '-'} ms`)}
     ${metricCard('maximo', `${m.max_ms ?? '-'} ms`)}
-    ${metricCard('errores', errPct)}
     ${metricCard('peticiones', m.http_reqs ?? '-')}
     ${metricCard('VUs max', m.vus_max ?? 'n/a')}
     ${metricCard('duracion', m.duration_s != null ? `${m.duration_s} s` : 'n/a')}

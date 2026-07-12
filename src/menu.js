@@ -14,8 +14,13 @@ export function parseArgs(argv) {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a.startsWith('--')) {
-      o[a.slice(2)] = argv[i + 1];
-      i++;
+      const next = argv[i + 1];
+      if (next === undefined || next.startsWith('--')) {
+        o[a.slice(2)] = true; // flag booleano
+      } else {
+        o[a.slice(2)] = next;
+        i++;
+      }
     }
   }
   return o;
@@ -37,6 +42,9 @@ export async function resolveOptions(argv) {
   const flags = parseArgs(argv);
   const config = loadConfig();
 
+  // --notify (booleano): envia alertas al canal configurado.
+  const notify = argv.includes('--notify');
+
   if (flags.tool) {
     // Modo no-interactivo (CI): todo por flags.
     const platform = flags.platform || 'web';
@@ -45,6 +53,7 @@ export async function resolveOptions(argv) {
       platform,
       type: flags.type || 'load',
       target: resolveTarget(config, platform, flags.target || 'demo'),
+      notify,
     };
     validate(opts);
     return { opts, config };
@@ -79,7 +88,7 @@ export async function resolveOptions(argv) {
     target = await input({ message: 'URL (https://...)', validate: (v) => /^https?:\/\//.test(v) || 'URL invalida' });
   }
 
-  const opts = { tool, platform, type, target };
+  const opts = { tool, platform, type, target, notify };
   validate(opts);
   return { opts, config };
 }

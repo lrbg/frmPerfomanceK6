@@ -24,8 +24,12 @@ export function appendIndex(meta) {
     type: meta.type,
     target: meta.target,
     p95_ms: meta.p95_ms,
+    p99_ms: meta.p99_ms,
     error_rate: meta.error_rate,
+    availability: meta.availability,
+    rps: meta.rps,
     http_reqs: meta.http_reqs,
+    alerts: (meta.alerts || []).length,
     pass: meta.pass,
     dir: meta.dir,
   });
@@ -59,21 +63,23 @@ function bars(runs) {
 }
 
 function rows(runs) {
-  if (!runs.length) return '<tr><td colspan="9" class="lbl">Sin corridas todavia.</td></tr>';
+  if (!runs.length) return '<tr><td colspan="11" class="lbl">Sin corridas todavia.</td></tr>';
   return runs
     .map((r) => {
       const badge = r.pass ? 'PASS' : 'FAIL';
       const bg = r.pass ? '#16a34a' : '#dc2626';
+      const alertTag = r.alerts ? `<span class="badge" style="background:#d97706">${r.alerts}</span>` : '';
       return `<tr data-tool="${esc(r.tool)}" data-type="${esc(r.type)}">
       <td>${esc(r.timestamp)}</td>
       <td>${esc(r.tool)}</td>
       <td>${esc(r.platform)}</td>
       <td>${esc(r.type)}</td>
       <td class="trunc" title="${esc(r.target)}">${esc(r.target)}</td>
+      <td>${r.availability != null ? esc(r.availability) + '%' : '-'}</td>
       <td>${esc(r.p95_ms)} ms</td>
       <td>${(r.error_rate * 100).toFixed(2)}%</td>
-      <td>${esc(r.http_reqs)}</td>
-      <td><span class="badge" style="background:${bg}">${badge}</span></td>
+      <td>${r.rps != null ? esc(r.rps) : '-'}</td>
+      <td><span class="badge" style="background:${bg}">${badge}</span> ${alertTag}</td>
       <td><a href="runs/${esc(r.dir)}/report.html">ver</a></td>
     </tr>`;
     })
@@ -83,6 +89,7 @@ function rows(runs) {
 function renderIndex(runs) {
   const total = runs.length;
   const passed = runs.filter((r) => r.pass).length;
+  const withAlerts = runs.filter((r) => r.alerts).length;
   return `<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -120,6 +127,7 @@ function renderIndex(runs) {
     <div class="stat"><div class="n">${total}</div><div class="l">corridas</div></div>
     <div class="stat"><div class="n">${passed}</div><div class="l">pasadas</div></div>
     <div class="stat"><div class="n">${total - passed}</div><div class="l">falladas</div></div>
+    <div class="stat"><div class="n">${withAlerts}</div><div class="l">con alertas</div></div>
   </div>
   <div class="panel">
     <div class="lbl" style="font-size:13px;margin-bottom:8px">p95 por corrida (verde = PASS, rojo = FAIL)</div>
@@ -139,7 +147,7 @@ function renderIndex(runs) {
     <table>
       <thead><tr>
         <th>Fecha</th><th>Motor</th><th>Plataforma</th><th>Tipo</th><th>Target</th>
-        <th>p95</th><th>Error</th><th>Reqs</th><th>Resultado</th><th>Reporte</th>
+        <th>Disp.</th><th>p95</th><th>Error</th><th>TPS/QPS</th><th>Resultado</th><th>Reporte</th>
       </tr></thead>
       <tbody id="rows">${rows(runs)}</tbody>
     </table>

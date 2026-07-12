@@ -35,10 +35,11 @@
     <div class="stat"><div class="n">2</div><div class="l">corridas</div></div>
     <div class="stat"><div class="n">2</div><div class="l">pasadas</div></div>
     <div class="stat"><div class="n">0</div><div class="l">falladas</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">con alertas</div></div>
   </div>
   <div class="panel">
     <div class="lbl" style="font-size:13px;margin-bottom:8px">p95 por corrida (verde = PASS, rojo = FAIL)</div>
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="2.37" width="40.00" height="37.63" fill="#16a34a"><title>k6 smoke - 73.52 ms</title></rect><rect x="50.00" y="2.00" width="40.00" height="38.00" fill="#16a34a"><title>k6 smoke - 74.25 ms</title></rect></svg>
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="2.00" width="40.00" height="38.00" fill="#16a34a"><title>k6 smoke - 70.46 ms</title></rect><rect x="50.00" y="2.71" width="40.00" height="37.29" fill="#16a34a"><title>k6 smoke - 69.14 ms</title></rect></svg>
   </div>
   <div class="filters">
     <button class="active" data-f="all">Todas</button>
@@ -54,30 +55,32 @@
     <table>
       <thead><tr>
         <th>Fecha</th><th>Motor</th><th>Plataforma</th><th>Tipo</th><th>Target</th>
-        <th>p95</th><th>Error</th><th>Reqs</th><th>Resultado</th><th>Reporte</th>
+        <th>Disp.</th><th>p95</th><th>Error</th><th>TPS/QPS</th><th>Resultado</th><th>Reporte</th>
       </tr></thead>
       <tbody id="rows"><tr data-tool="k6" data-type="smoke">
-      <td>2026-07-12T03-37-57</td>
+      <td>2026-07-12T04-04-51</td>
       <td>k6</td>
       <td>api</td>
       <td>smoke</td>
       <td class="trunc" title="https://httpbin.test.k6.io/get">https://httpbin.test.k6.io/get</td>
-      <td>74.25 ms</td>
+      <td>100%</td>
+      <td>69.14 ms</td>
       <td>0.00%</td>
-      <td>54</td>
-      <td><span class="badge" style="background:#16a34a">PASS</span></td>
-      <td><a href="runs/2026-07-12T03-37-57-k6-smoke-api/report.html">ver</a></td>
+      <td>1.76</td>
+      <td><span class="badge" style="background:#16a34a">PASS</span> </td>
+      <td><a href="runs/2026-07-12T04-04-51-k6-smoke-api/report.html">ver</a></td>
     </tr><tr data-tool="k6" data-type="smoke">
-      <td>2026-07-12T03-37-00</td>
+      <td>2026-07-12T03-57-44</td>
       <td>k6</td>
       <td>web</td>
       <td>smoke</td>
       <td class="trunc" title="https://test.k6.io">https://test.k6.io</td>
-      <td>73.52 ms</td>
+      <td>100%</td>
+      <td>70.46 ms</td>
       <td>0.00%</td>
-      <td>52</td>
-      <td><span class="badge" style="background:#16a34a">PASS</span></td>
-      <td><a href="runs/2026-07-12T03-37-00-k6-smoke-web/report.html">ver</a></td>
+      <td>1.74</td>
+      <td><span class="badge" style="background:#16a34a">PASS</span> </td>
+      <td><a href="runs/2026-07-12T03-57-44-k6-smoke-web/report.html">ver</a></td>
     </tr></tbody>
     </table>
   </div>

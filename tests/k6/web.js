@@ -10,6 +10,8 @@ const ERR = Number(__ENV.THRESH_ERR || 0.01);
 
 export const options = {
   stages: profiles[TYPE].stages,
+  // Incluye p(99) en el resumen para el KPI de latencia de cola.
+  summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
   thresholds: {
     http_req_duration: [`p(95)<${P95}`],
     http_req_failed: [`rate<${ERR}`],
