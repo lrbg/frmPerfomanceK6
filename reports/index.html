@@ -32,14 +32,14 @@
   <h1>Dashboard de performance</h1>
   <div class="sub">Historico unificado de corridas k6 y JMeter</div>
   <div class="stats">
-    <div class="stat"><div class="n">4</div><div class="l">corridas</div></div>
-    <div class="stat"><div class="n">4</div><div class="l">pasadas</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">corridas</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">pasadas</div></div>
     <div class="stat"><div class="n">0</div><div class="l">falladas</div></div>
     <div class="stat"><div class="n">0</div><div class="l">con alertas</div></div>
   </div>
   <div class="panel">
     <div class="lbl" style="font-size:13px;margin-bottom:8px">p95 por corrida (verde = PASS, rojo = FAIL)</div>
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="29.73" width="20.00" height="10.27" fill="#16a34a"><title>k6 smoke - 70.46 ms</title></rect><rect x="25.00" y="29.93" width="20.00" height="10.07" fill="#16a34a"><title>k6 smoke - 69.14 ms</title></rect><rect x="50.00" y="2.00" width="20.00" height="38.00" fill="#16a34a"><title>k6 smoke - 260.78 ms</title></rect><rect x="75.00" y="19.58" width="20.00" height="20.42" fill="#16a34a"><title>k6 smoke - 140.12 ms</title></rect></svg>
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="29.73" width="16.00" height="10.27" fill="#16a34a"><title>k6 smoke - 70.46 ms</title></rect><rect x="20.00" y="29.93" width="16.00" height="10.07" fill="#16a34a"><title>k6 smoke - 69.14 ms</title></rect><rect x="40.00" y="2.00" width="16.00" height="38.00" fill="#16a34a"><title>k6 smoke - 260.78 ms</title></rect><rect x="60.00" y="19.58" width="16.00" height="20.42" fill="#16a34a"><title>k6 smoke - 140.12 ms</title></rect><rect x="80.00" y="14.26" width="16.00" height="25.74" fill="#16a34a"><title>k6 load - 176.67 ms</title></rect></svg>
   </div>
   <div class="filters">
     <button class="active" data-f="all">Todas</button>
@@ -57,7 +57,19 @@
         <th>Fecha</th><th>Motor</th><th>Plataforma</th><th>Tipo</th><th>Target</th>
         <th>Disp.</th><th>p95</th><th>Error</th><th>TPS/QPS</th><th>Resultado</th><th>Reporte</th>
       </tr></thead>
-      <tbody id="rows"><tr data-tool="k6" data-type="smoke">
+      <tbody id="rows"><tr data-tool="k6" data-type="load">
+      <td>2026-07-12T04-37-14</td>
+      <td>k6</td>
+      <td>web</td>
+      <td>load</td>
+      <td class="trunc" title="https://gfa-staging.resertravel.com/">https://gfa-staging.resertravel.com/</td>
+      <td>100%</td>
+      <td>176.67 ms</td>
+      <td>0.00%</td>
+      <td>14.21</td>
+      <td><span class="badge" style="background:#16a34a">PASS</span> </td>
+      <td><a href="runs/2026-07-12T04-37-14-k6-load-web/report.html">ver</a></td>
+    </tr><tr data-tool="k6" data-type="smoke">
       <td>2026-07-12T04-23-56</td>
       <td>k6</td>
       <td>web</td>
