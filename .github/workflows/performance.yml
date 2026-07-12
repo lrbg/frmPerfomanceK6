@@ -28,13 +28,6 @@ on:
 permissions:
   contents: write
 
-# Serializa las ejecuciones: si disparas varias (load, stress, spike) se
-# encolan y corren de una en una, evitando doble carga al target y choques
-# al hacer push del historico.
-concurrency:
-  group: performance-history
-  cancel-in-progress: false
-
 jobs:
   perf:
     runs-on: ubuntu-latest
