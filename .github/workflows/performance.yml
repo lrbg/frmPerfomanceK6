@@ -28,6 +28,13 @@ on:
 permissions:
   contents: write
 
+# Serializa las ejecuciones: si disparas varias (load, stress, spike) se
+# encolan y corren de una en una, evitando doble carga al target y choques
+# al hacer push del historico.
+concurrency:
+  group: performance-history
+  cancel-in-progress: false
+
 jobs:
   perf:
     runs-on: ubuntu-latest
@@ -85,6 +92,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add reports/
           git commit -m "perf: ${{ inputs.tool }} ${{ inputs.type }} ${{ inputs.platform }} (${{ inputs.target }})" || echo "sin cambios"
+          # Trae cambios recientes (otra corrida encolada) antes de empujar.
+          git pull --rebase origin main || true
           git push || echo "no se pudo hacer push"
 
       - name: Reflejar veredicto del gate
