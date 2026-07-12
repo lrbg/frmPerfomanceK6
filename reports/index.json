@@ -78,5 +78,53 @@
     "alerts": 0,
     "pass": true,
     "dir": "2026-07-12T04-37-14-k6-load-web"
+  },
+  {
+    "timestamp": "2026-07-12T04-43-56",
+    "tool": "k6",
+    "platform": "web",
+    "type": "load",
+    "target": "https://gfa-staging.resertravel.com/",
+    "p95_ms": 29.52,
+    "p99_ms": 36.72,
+    "error_rate": 0,
+    "availability": 100,
+    "rps": 15.75,
+    "http_reqs": 4732,
+    "alerts": 0,
+    "pass": true,
+    "dir": "2026-07-12T04-43-56-k6-load-web"
+  },
+  {
+    "timestamp": "2026-07-12T04-48-56",
+    "tool": "k6",
+    "platform": "web",
+    "type": "stress",
+    "target": "https://gfa-staging.resertravel.com/",
+    "p95_ms": 67.73,
+    "p99_ms": 199.12,
+    "error_rate": 0,
+    "availability": 100,
+    "rps": 81.76,
+    "http_reqs": 39256,
+    "alerts": 0,
+    "pass": true,
+    "dir": "2026-07-12T04-48-56-k6-stress-web"
+  },
+  {
+    "timestamp": "2026-07-12T04-56-57",
+    "tool": "k6",
+    "platform": "web",
+    "type": "spike",
+    "target": "https://gfa-staging.resertravel.com/",
+    "p95_ms": 805.19,
+    "p99_ms": 1408.09,
+    "error_rate": 0,
+    "availability": 100,
+    "rps": 109.25,
+    "http_reqs": 6667,
+    "alerts": 1,
+    "pass": false,
+    "dir": "2026-07-12T04-56-57-k6-spike-web"
   }
 ]
