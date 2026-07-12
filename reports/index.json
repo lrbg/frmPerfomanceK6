@@ -46,5 +46,21 @@
     "alerts": 0,
     "pass": true,
     "dir": "2026-07-12T04-20-12-k6-smoke-web"
+  },
+  {
+    "timestamp": "2026-07-12T04-23-56",
+    "tool": "k6",
+    "platform": "web",
+    "type": "smoke",
+    "target": "https://gfa-staging.resertravel.com/",
+    "p95_ms": 140.12,
+    "p99_ms": 201.96,
+    "error_rate": 0,
+    "availability": 100,
+    "rps": 0.87,
+    "http_reqs": 27,
+    "alerts": 0,
+    "pass": true,
+    "dir": "2026-07-12T04-23-56-k6-smoke-web"
   }
 ]
