@@ -1,0 +1,5 @@
+node_modules/
+*.log
+.DS_Store
+# El historico de reportes SI se versiona (reports/), solo ignoramos crudos pesados
+reports/runs/**/results.jtl

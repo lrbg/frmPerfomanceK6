@@ -1,0 +1,20 @@
+{
+  "name": "frm-performance-k6",
+  "version": "1.0.0",
+  "description": "Framework de pruebas de performance automatizadas (k6 y JMeter) con menu interactivo, reportes HTML e historico unificado",
+  "type": "module",
+  "bin": {
+    "perf": "bin/perf.js"
+  },
+  "scripts": {
+    "start": "node bin/perf.js",
+    "report": "node -e \"import('./src/report/buildIndex.js').then(m=>m.buildIndex())\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.1"
+  },
+  "license": "MIT"
+}

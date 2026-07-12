@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard de performance</title>
+<style>
+  :root{color-scheme:light dark}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#0b0e14;color:#e6e6e6}
+  @media(prefers-color-scheme:light){body{background:#f6f7f9;color:#1a1a1a}}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 20px}
+  h1{font-size:24px;margin:0 0 4px}
+  .sub{opacity:.7;margin-bottom:20px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+  .stat{background:#151a24;border:1px solid #232a38;border-radius:12px;padding:12px 18px}
+  @media(prefers-color-scheme:light){.stat,.panel{background:#fff;border-color:#e5e7eb}}
+  .stat .n{font-size:22px;font-weight:700}
+  .stat .l{font-size:12px;opacity:.7;text-transform:uppercase}
+  .panel{background:#151a24;border:1px solid #232a38;border-radius:12px;padding:16px;margin-bottom:20px}
+  .chart{width:100%;height:120px;display:block}
+  .filters{margin:0 0 12px;display:flex;gap:8px;flex-wrap:wrap}
+  .filters button{background:#232a38;color:inherit;border:0;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px}
+  .filters button.active{background:#3b82f6;color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px;border-bottom:1px solid #232a38;text-align:left}
+  @media(prefers-color-scheme:light){th,td{border-color:#eee}}
+  th{opacity:.7;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.04em}
+  .trunc{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:700;font-size:11px;color:#fff}
+  .lbl{opacity:.6}
+  a{color:#60a5fa}
+</style></head>
+<body><div class="wrap">
+  <h1>Dashboard de performance</h1>
+  <div class="sub">Historico unificado de corridas k6 y JMeter</div>
+  <div class="stats">
+    <div class="stat"><div class="n">2</div><div class="l">corridas</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">pasadas</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">falladas</div></div>
+  </div>
+  <div class="panel">
+    <div class="lbl" style="font-size:13px;margin-bottom:8px">p95 por corrida (verde = PASS, rojo = FAIL)</div>
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" class="chart"><rect x="0.00" y="2.37" width="40.00" height="37.63" fill="#16a34a"><title>k6 smoke - 73.52 ms</title></rect><rect x="50.00" y="2.00" width="40.00" height="38.00" fill="#16a34a"><title>k6 smoke - 74.25 ms</title></rect></svg>
+  </div>
+  <div class="filters">
+    <button class="active" data-f="all">Todas</button>
+    <button data-f="tool:k6">k6</button>
+    <button data-f="tool:jmeter">JMeter</button>
+    <button data-f="type:smoke">Smoke</button>
+    <button data-f="type:load">Load</button>
+    <button data-f="type:stress">Stress</button>
+    <button data-f="type:spike">Spike</button>
+    <button data-f="type:soak">Soak</button>
+  </div>
+  <div class="panel" style="padding:0;overflow-x:auto">
+    <table>
+      <thead><tr>
+        <th>Fecha</th><th>Motor</th><th>Plataforma</th><th>Tipo</th><th>Target</th>
+        <th>p95</th><th>Error</th><th>Reqs</th><th>Resultado</th><th>Reporte</th>
+      </tr></thead>
+      <tbody id="rows"><tr data-tool="k6" data-type="smoke">
+      <td>2026-07-12T03-37-57</td>
+      <td>k6</td>
+      <td>api</td>
+      <td>smoke</td>
+      <td class="trunc" title="https://httpbin.test.k6.io/get">https://httpbin.test.k6.io/get</td>
+      <td>74.25 ms</td>
+      <td>0.00%</td>
+      <td>54</td>
+      <td><span class="badge" style="background:#16a34a">PASS</span></td>
+      <td><a href="runs/2026-07-12T03-37-57-k6-smoke-api/report.html">ver</a></td>
+    </tr><tr data-tool="k6" data-type="smoke">
+      <td>2026-07-12T03-37-00</td>
+      <td>k6</td>
+      <td>web</td>
+      <td>smoke</td>
+      <td class="trunc" title="https://test.k6.io">https://test.k6.io</td>
+      <td>73.52 ms</td>
+      <td>0.00%</td>
+      <td>52</td>
+      <td><span class="badge" style="background:#16a34a">PASS</span></td>
+      <td><a href="runs/2026-07-12T03-37-00-k6-smoke-web/report.html">ver</a></td>
+    </tr></tbody>
+    </table>
+  </div>
+</div>
+<script>
+  const btns = document.querySelectorAll('.filters button');
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => x.classList.remove('active'));
+    b.classList.add('active');
+    const f = b.dataset.f;
+    document.querySelectorAll('#rows tr').forEach((tr) => {
+      if (f === 'all') { tr.style.display = ''; return; }
+      const [k, v] = f.split(':');
+      tr.style.display = tr.dataset[k] === v ? '' : 'none';
+    });
+  }));
+</script>
+</body></html>

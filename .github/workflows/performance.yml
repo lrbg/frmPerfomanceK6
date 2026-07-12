@@ -1,0 +1,94 @@
+name: Performance
+
+# Se dispara manualmente desde la pestana Actions eligiendo motor, plataforma,
+# tipo de prueba y target. El historico de reportes se commitea de regreso al repo.
+on:
+  workflow_dispatch:
+    inputs:
+      tool:
+        description: Motor de pruebas
+        type: choice
+        options: [k6, jmeter]
+        default: k6
+      platform:
+        description: Plataforma
+        type: choice
+        options: [web, api]
+        default: web
+      type:
+        description: Tipo de prueba
+        type: choice
+        options: [smoke, load, stress, spike, soak]
+        default: load
+      target:
+        description: Target (nombre de perf.config.json o URL completa)
+        type: string
+        default: demo
+
+permissions:
+  contents: write
+
+jobs:
+  perf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Instalar k6
+        if: ${{ inputs.tool == 'k6' }}
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" \
+            | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Instalar JMeter
+        if: ${{ inputs.tool == 'jmeter' }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y default-jre
+          curl -fsSL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz -o jmeter.tgz
+          tar xzf jmeter.tgz
+          echo "$PWD/apache-jmeter-5.6.3/bin" >> "$GITHUB_PATH"
+
+      - name: Ejecutar prueba
+        id: run
+        run: |
+          node bin/perf.js \
+            --tool "${{ inputs.tool }}" \
+            --platform "${{ inputs.platform }}" \
+            --type "${{ inputs.type }}" \
+            --target "${{ inputs.target }}"
+        # Si falla el gate (umbral cruzado) el step falla, pero seguimos para
+        # subir la evidencia y actualizar el historico.
+        continue-on-error: true
+
+      - name: Publicar reporte como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report-${{ inputs.tool }}-${{ inputs.type }}
+          path: reports/
+
+      - name: Actualizar historico en el repo
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          git commit -m "perf: ${{ inputs.tool }} ${{ inputs.type }} ${{ inputs.platform }} (${{ inputs.target }})" || echo "sin cambios"
+          git push || echo "no se pudo hacer push"
+
+      - name: Reflejar veredicto del gate
+        if: steps.run.outcome == 'failure'
+        run: |
+          echo "La prueba cruzo los umbrales definidos en perf.config.json"
+          exit 1

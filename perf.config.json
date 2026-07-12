@@ -1,0 +1,19 @@
+{
+  "targets": {
+    "web": {
+      "demo": "https://test.k6.io",
+      "staging": "https://test.k6.io"
+    },
+    "api": {
+      "demo": "https://httpbin.test.k6.io/get",
+      "crocodiles": "https://test-api.k6.io/public/crocodiles/"
+    }
+  },
+  "thresholds": {
+    "p95_ms": 800,
+    "error_rate": 0.01
+  },
+  "jmeter": {
+    "binary": "jmeter"
+  }
+}
