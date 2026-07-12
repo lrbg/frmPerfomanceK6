@@ -542,5 +542,37 @@
     "alerts": 1,
     "pass": true,
     "dir": "2026-07-12T22-24-01-k6-smoke-api"
+  },
+  {
+    "timestamp": "2026-07-12T23-26-31",
+    "tool": "k6",
+    "platform": "web",
+    "type": "smoke",
+    "target": "https://test.k6.io",
+    "p95_ms": 65.81,
+    "p99_ms": 66.08,
+    "error_rate": 0,
+    "availability": 100,
+    "rps": 1.85,
+    "http_reqs": 56,
+    "alerts": 1,
+    "pass": true,
+    "dir": "2026-07-12T23-26-31-k6-smoke-web"
+  },
+  {
+    "timestamp": "2026-07-12T23-27-03",
+    "tool": "k6",
+    "platform": "api",
+    "type": "smoke",
+    "target": "https://httpbin.test.k6.io/get",
+    "p95_ms": 71.21,
+    "p99_ms": 71.54,
+    "error_rate": 0,
+    "availability": 100,
+    "rps": 1.85,
+    "http_reqs": 56,
+    "alerts": 1,
+    "pass": true,
+    "dir": "2026-07-12T23-27-03-k6-smoke-api"
   }
 ]
