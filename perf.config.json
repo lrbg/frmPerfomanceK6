@@ -2,7 +2,12 @@
   "targets": {
     "web": {
       "demo": "https://test.k6.io",
-      "staging": "https://test.k6.io"
+      "gfa": "https://gfa-staging.resertravel.com/",
+      "roll-bits": "https://roll-bits-staging.resertravel.com/",
+      "brasilia": "https://brasilia-staging.resertravel.com/",
+      "costaline": "https://costaline-staging.resertravel.com/",
+      "rochoa": "https://rochoa-staging.resertravel.com/",
+      "conectagfa": "https://conectagfa-staging.resertravel.com/"
     },
     "api": {
       "demo": "https://httpbin.test.k6.io/get",

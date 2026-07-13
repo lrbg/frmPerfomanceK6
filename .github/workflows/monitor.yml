@@ -4,7 +4,7 @@ name: Monitor
 # si detecta caida, degradacion o lentitud fuera de lo normal, abre un GitHub Issue.
 on:
   schedule:
-    - cron: '*/15 * * * *' # cada 15 min (ajusta la cadencia segun tu presupuesto de Actions)
+    - cron: '0 */8 * * *' # cada 8 horas (00:00, 08:00, 16:00 UTC)
   workflow_dispatch:
 
 permissions:
@@ -37,11 +37,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Lista de targets a vigilar (plataforma + nombre en perf.config.json).
-          for pair in "web demo" "api demo"; do
-            set -- $pair
-            echo "== monitoreando $1/$2 =="
-            node bin/perf.js --tool k6 --platform "$1" --type smoke --target "$2" --notify || true
+          # Marcas de staging a vigilar (nombres definidos en perf.config.json > targets.web).
+          for brand in gfa roll-bits brasilia costaline rochoa conectagfa; do
+            echo "== monitoreando web/$brand =="
+            node bin/perf.js --tool k6 --platform web --type smoke --target "$brand" --notify || true
           done
 
       - name: Guardar historico
