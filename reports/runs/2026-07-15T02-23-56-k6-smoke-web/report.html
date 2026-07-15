@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reporte k6 smoke - 2026-07-15T02-23-56</title>
+<style>
+  :root{color-scheme:light dark}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#0b0e14;color:#e6e6e6}
+  @media(prefers-color-scheme:light){body{background:#f6f7f9;color:#1a1a1a}}
+  .wrap{max-width:900px;margin:0 auto;padding:32px 20px}
+  h1{font-size:22px;margin:0 0 4px}
+  .meta{opacity:.7;font-size:14px;margin-bottom:20px}
+  .badge{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px;color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:20px 0}
+  .card{background:#151a24;border:1px solid #232a38;border-radius:12px;padding:14px 16px}
+  @media(prefers-color-scheme:light){.card{background:#fff;border-color:#e5e7eb}}
+  .card .k{font-size:12px;opacity:.7;text-transform:uppercase;letter-spacing:.04em}
+  .card .v{font-size:24px;font-weight:700;margin-top:4px}
+  .card .s{font-size:12px;opacity:.6;margin-top:2px}
+  .bar{height:14px;background:#232a38;border-radius:8px;overflow:hidden;margin-top:8px}
+  .bar>span{display:block;height:100%}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  td{padding:6px 8px;border-bottom:1px solid #232a38}
+  @media(prefers-color-scheme:light){td{border-color:#eee}}
+  .lbl{opacity:.65}
+  a{color:#60a5fa}
+  .alert{border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px;border:1px solid}
+  .alert.ok{background:#0f2417;border-color:#1c5236;color:#7ee2a8}
+  .alert.warn{background:#2a2410;border-color:#5a4d15;color:#f2d675}
+  .alert.crit{background:#2a1212;border-color:#5a1d1d;color:#f4a0a0}
+  @media(prefers-color-scheme:light){
+    .alert.ok{background:#ecfdf5;color:#065f46}
+    .alert.warn{background:#fffbeb;color:#92400e}
+    .alert.crit{background:#fef2f2;color:#991b1b}
+  }
+</style></head>
+<body><div class="wrap">
+  <h1>Reporte de performance</h1>
+  <div class="meta">
+    <span class="badge" style="background:#16a34a">PASS</span>
+    &nbsp; K6 &middot; web &middot; smoke &middot; 2026-07-15T02-23-56
+  </div>
+  <table>
+    <tr><td class="lbl">Target</td><td>https://gfa-staging.resertravel.com/</td></tr>
+    <tr><td class="lbl">Umbral p95</td><td>800 ms</td></tr>
+    <tr><td class="lbl">Umbral error</td><td>1.00%</td></tr>
+  </table>
+  <div class="alert ok">Sin alertas: todas las senales dentro de lo esperado.</div>
+  <div class="lbl" style="font-size:13px;margin-top:8px">Senales de oro (KPIs)</div>
+  <div class="grid">
+    <div class="card"><div class="k">disponibilidad</div><div class="v">100%</div><div class="s">uptime</div></div>
+    <div class="card"><div class="k">p95 latencia</div><div class="v">165.63 ms</div><div class="s">umbral 800 ms</div></div>
+    <div class="card"><div class="k">errores</div><div class="v">0.00%</div></div>
+    <div class="card"><div class="k">TPS / QPS</div><div class="v">0.87</div><div class="s">req/seg</div></div>
+  </div>
+  <div class="lbl" style="font-size:13px">Detalle</div>
+  <div class="grid">
+    <div class="card"><div class="k">p90</div><div class="v">163.08 ms</div></div>
+    <div class="card"><div class="k">p99</div><div class="v">288.36 ms</div></div>
+    <div class="card"><div class="k">promedio</div><div class="v">152.65 ms</div></div>
+    <div class="card"><div class="k">maximo</div><div class="v">329.1 ms</div></div>
+    <div class="card"><div class="k">peticiones</div><div class="v">26</div></div>
+    <div class="card"><div class="k">VUs max</div><div class="v">1</div></div>
+    <div class="card"><div class="k">duracion</div><div class="v">30.03 s</div></div>
+  </div>
+  <div class="lbl" style="font-size:13px">p95 vs umbral</div>
+  <div class="bar"><span style="width:14%;background:#16a34a"></span></div>
+</div></body></html>
